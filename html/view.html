@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <style>
+        .fb {
+            background-color: #73a0ff;
+            color: rgb(0, 0, 0);
+            font-weight: 100;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-size: 20px;
+            margin: 10px;
+        }
+        
+        .fb * {
+            position: relative;
+        }
+        
+        .fb .topic {
+            font-size: 40px;
+            margin: 15px;
+            padding: 0;
+        }
+        
+        .fb .main {
+            font-size: 30px;
+            margin: 0 50px;
+            padding: 0;
+        }
+        
+        .fb .date {
+            right: 5px;
+        }
+        
+        .title {
+            font-weight: 100;
+            font-size: 50px;
+            margin: 50px;
+            padding: 0;
+        }
+    </style>
+    <center>
+        <p class="title">Feedback of ${user}</p>
+    </center>
+    <div class="fb">
+        <p class="topic">${data.data[i].topic}</p>
+        <p class="main">${data.data[i].message}-${data.data[i].message}</p>
+        <p class="date">${data.data[i].date}</p>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XFeedback Api</title>
+    <style>
+        input {
+            width: 500px;
+            height: 60px;
+            font-size: 20px;
+            margin: 10px;
+            padding: 2px 10px;
+            border: 2px solid #ccc;
+            border-bottom: 5px solid rgb(123, 156, 255);
+            border-radius: 4px;
+            outline: none;
+            background-color: transparent;
+            font-weight: 100;
+        }
+        
+        .formTip {
+            position: relative;
+            left: -500px;
+            z-index: 2;
+            color: rgb(0, 0, 0);
+            top: 0px;
+            transition: .3s;
+            background-color: white;
+            padding: 0 5px;
+            border-radius: 4px;
+            font-size: 20px;
+            font-weight: 100;
+        }
+        
+        .form {
+            padding: 50px;
+            border-radius: 4px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            height: 500px;
+        }
+        
+        button {
+            width: 520px;
+            height: 60px;
+            font-size: 20px;
+            margin: 10px;
+            padding: 2px 10px;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            outline: none;
+            background-color: transparent;
+            font-weight: 100;
+            transition: .5s;
+        }
+        
+        button:hover {
+            background-color: rgb(255, 225, 172);
+        }
+        
+        @keyframes out {
+            0% {
+                height: 500px;
+                opacity: 1;
+            }
+            100% {
+                height: 0px;
+                opacity: 0;
+            }
+        }
+        
+        @keyframes in {
+            0% {
+                height: 0px;
+                opacity: 0;
+            }
+            100% {
+                height: 500px;
+                opacity: 1;
+            }
+        }
+        
+        p {
+            font-weight: 100;
+            font-size: 26px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="form" id="f">
+        <div class="form-group">
+            <input type="text" class="form-control" id="key" placeholder="Api Key">
+        </div>
+        <div class="form-group">
+            <input type="text" class="form-control" id="password" placeholder="Password">
+        </div>
+        <button class="submit" onclick="confirmData()">View</button>
+    </div>
+    <script src="https://xchuangc.github.io/messagejs/message.js"></script>
+    <script>
+        startXmessage( /*Config*/ );
+        var confirmData = () => {
+            var key = document.getElementById('key').value;
+            var password = document.getElementById('password').value;
+            if (key == '') {
+                showMessage('Please input your api key', 'error');
+                return;
+            }
+            if (password == '') {
+                showMessage('Please input your password', 'error');
+                return;
+            }
+            location.href = `/view/?${key}&${password}`;
+        }
+    </script>
+</body>
+
+</html>

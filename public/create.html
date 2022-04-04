@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create an api key</title>
+    <style>
+        input {
+            width: 500px;
+            height: 60px;
+            font-size: 20px;
+            margin: 10px;
+            padding: 2px 10px;
+            border: 2px solid #ccc;
+            border-bottom: 5px solid rgb(123, 156, 255);
+            border-radius: 4px;
+            outline: none;
+            background-color: transparent;
+            font-weight: 100;
+        }
+        
+        .formTip {
+            position: relative;
+            left: -500px;
+            z-index: 2;
+            color: rgb(0, 0, 0);
+            top: 0px;
+            transition: .3s;
+            background-color: white;
+            padding: 0 5px;
+            border-radius: 4px;
+            font-size: 20px;
+            font-weight: 100;
+        }
+        
+        .form {
+            padding: 50px;
+            border-radius: 4px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            height: 500px;
+        }
+        
+        button {
+            width: 520px;
+            height: 60px;
+            font-size: 20px;
+            margin: 10px;
+            padding: 2px 10px;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            outline: none;
+            background-color: transparent;
+            font-weight: 100;
+            transition: .5s;
+        }
+        
+        button:hover {
+            background-color: rgb(255, 225, 172);
+        }
+        
+        @keyframes out {
+            0% {
+                height: 500px;
+                opacity: 1;
+            }
+            100% {
+                height: 0px;
+                opacity: 0;
+            }
+        }
+        
+        @keyframes in {
+            0% {
+                height: 0px;
+                opacity: 0;
+            }
+            100% {
+                height: 500px;
+                opacity: 1;
+            }
+        }
+        
+        p {
+            font-weight: 100;
+            font-size: 26px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="form" id="f">
+        <!-- username, password and confirm pw &&  -->
+        <div class="form-group">
+            <input type="text" class="form-control" id="username" placeholder="Username">
+        </div>
+        <div class="form-group">
+            <input type="text" class="form-control" id="password" placeholder="Password">
+        </div>
+        <div class="form-group">
+            <input type="text" class="form-control" id="confirm" placeholder="Confirm password">
+        </div>
+        <button class="submit" onclick="confirmData()">Submit</button>
+    </div>
+    <div class="form" id="c" style="display: none;">
+        <p>Please confirm and remember the information below</p>
+        <p id="Username"></p>
+        <p id="Password"></p>
+        <p id="Apikey">Api key: ${key}</p>
+        <button id="s">Confirm and create</button>
+    </div>
+    <script>
+        var username = document.getElementById('username');
+        var password = document.getElementById('password');
+        var confirmX = document.getElementById('confirm');
+        var submit = document.getElementsByClassName('submit')[0];
+
+        var confirmData = () => {
+            if (username.value != '') {
+                /*if email.value is not email*/
+                if (password.value != '' && password.value == confirmX.value) {
+                    document.getElementById('f').style.animation = 'out 1s';
+                    setTimeout(() => {
+                        document.getElementById('f').style.display = 'none'
+                        document.getElementById('c').style.animation = 'in 1s';
+                        document.getElementById('c').style.display = 'block';
+                    }, 1000);
+                    document.getElementById('Username').innerHTML = 'Username: ' + username.value;
+                    document.getElementById('Password').innerHTML = 'Password: ' + password.value;
+                    document.getElementById('s').onclick = () => {
+                        location.href = '/api/create?username=' + username.value + '&password=' + password.value + '&apikey=' + document.getElementById('Apikey').innerHTML.split(' ')[2];
+                    }
+
+                } else if (password.value == '') {
+                    message('Please input password');
+                } else if (password.value != confirmX.value) {
+                    message('Comfirm password is not correct');
+                }
+
+            } else {
+                message('Please input username');
+            }
+        };
+    </script>
+    <script src="https://xchuangc.github.io/messagejs/message.js"></script>
+    <script>
+        startXmessage( /*Config*/ );
+    </script>
+</body>
+
+</html>
