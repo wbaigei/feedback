@@ -197,6 +197,7 @@ app.get('/view', function(req, res) {
                 }
 
                 hr {
+                    max-width: 80%;
                     border: 0;
                     border-bottom: 1px solid #ccc;
                 }
@@ -398,6 +399,7 @@ app.get('/view/zh', function(req, res) {
                 }
 
                 hr {
+                    max-width: 80%;
                     border: 0;
                     border-bottom: 1px solid #ccc;
                 }

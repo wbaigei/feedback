@@ -4,4 +4,105 @@ body {
     font-size: 14px;
     color: #333;
     line-height: 1.5;
+    overflow-x: hidden;
+}
+
+button {
+    width: calc(80vw + 20px);
+    max-width: 520px;
+    height: 60px;
+    font-size: 20px;
+    margin: 10px;
+    padding: 2px 10px;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    outline: none;
+    background-color: transparent;
+    transition: .5s;
+}
+
+button * {
+    font-weight: 100;
+}
+
+button:hover {
+    background-color: rgb(255, 225, 172);
+}
+
+p {
+    font-weight: 100;
+    font-size: 26px;
+}
+
+h1 {
+    font-weight: 100;
+    font-size: 76px;
+    margin: 25px;
+}
+
+h2 {
+    font-weight: 100;
+    font-size: 56px;
+}
+
+h3 {
+    font-weight: 100;
+    font-size: 36px;
+}
+
+input {
+    width: 80vw;
+    max-width: 520px;
+    height: 60px;
+    font-size: 20px;
+    margin: 10px;
+    padding: 2px 10px;
+    border: 2px solid #ccc;
+    border-bottom: 5px solid rgb(123, 156, 255);
+    border-radius: 4px;
+    outline: none;
+    background-color: transparent;
+    font-weight: 100;
+    text-overflow: ellipsis;
+}
+
+input[readonly] {
+    border-bottom: 5px solid #ccc;
+}
+
+hr {
+    max-width: 80%;
+    border: 0;
+    border-bottom: 1px solid #ccc;
+}
+
+#header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 500px;
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(123, 156, 255);
+}
+
+.hblocking {
+    height: 500px;
+}
+
+.wblocking {
+    height: calc(100vw * 0.12);
+}
+
+* {
+    font-weight: 100;
+    user-select: none;
+}
+
+.wave {
+    position: absolute;
+    left: 0;
+    width: 100vw;
 }

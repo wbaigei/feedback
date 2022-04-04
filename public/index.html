@@ -10,7 +10,56 @@
 </head>
 
 <body>
+    <center id="header">
+        <h1>X Feedback Api</h1>
+    </center>
+    <div class="hblocking"></div>
+    <center>
+        <h2>“Feature”</h2>
+        <hr>
+        <h3>Speed · Convenience</h3>
+        <p>You can simply create your api key and quickly let users submit their feedback and review them in a few steps.</p>
+        <hr>
+        <h3>No login required</h3>
+        <p>You can use the api without having to login to your website.</p>
+        <hr>
+        <h3>Excellent code quality</h3>
+        <p>After numerous tests, the code is guaranteed to be error-free.</p>
+        <p>In addition, the code is simple, the access speed is extremely fast.</p>
+    </center>
+    <svg class="wave" viewBox="0 0 1020 127" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4 50.4265C260.067 -131.307 744.546 284.546 1016 50.4265" stroke="rgb(123, 156, 255)" stroke-width="5" stroke-linecap="square" />
+    </svg>
+    <div class="wblocking"></div>
+    <center>
+        <h2>“Steps”</h2>
+        <hr>
+        <p>1. Create an API key. </p>
+        <button onclick="top.location = '/create'">Create</button>
+        <hr>
+        <p>2. Let users send you feedback. </p>
+        <input type="text" name="key" id="key" placeholder="Api Key">
+        <br>
+        <button onclick="document.getElementById('rt').value = 'https://xfeedback.herokuapp.com/send?topic=[TOPIC]&user=[USERNAME]&message=[BODY]&api=' + document.getElementById('key').value;">Send</button>
+        <br>
+        <input type="text" name="return" id="rt" readonly placeholder="Press the Send button">
+        <hr>
+        <p>3. View all feedback. </p>
+        <input type="text" name="pw" id="pw" placeholder="Password">
+        <br>
+        <button onclick="top.location = '/view?' + document.getElementById('key').value + '&' + document.getElementById('pw').value;">View</button>
+    </center>
 
+    <center>
+        <tr><br><br>
+            <a style="color:rgba(0, 0, 0, 0.671);" href="https://xchuangc.github.io/">Xchuangc</a>
+            <air></air>
+            <br>
+            <a style="color:rgb(0, 0, 0);">© Xchuang, 2022. All Rights Reserved.</a>
+            <hr><img draggable="false" src="https://starwes.github.io/assets/XC.svg" height="60px" style="background:white; padding:20px;"><br><text>Part of Xchuangc(Xcfo) family.</text>
+            <br>
+        </tr>
+    </center>
 </body>
 
 </html>
