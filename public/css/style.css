@@ -102,6 +102,7 @@ hr {
 }
 
 .wave {
+    margin-top: 25px;
     position: absolute;
     left: 0;
     width: 100vw;
@@ -127,4 +128,44 @@ hr {
 .feedback p {
     width: 90%;
     text-overflow: ellipsis;
+}
+
+.div-margin {
+    margin-left: 55px;
+}
+
+g {
+    border-bottom: 1px solid #ccc;
+    cursor: pointer;
+    color: rgb(0, 102, 255);
+}
+
+img {
+    width: calc(80vw - 50px);
+    max-width: 1000px;
+    box-shadow: rgba(0, 0, 0, 0.179) 0px 2px 10px;
+    border-radius: 10px;
+}
+
+.prettyprint {
+    user-select: text !important;
+    border-radius: none;
+    background-color: #ffffff;
+    outline: none !important;
+    border: 1px solid black !important;
+    border-bottom: 5px solid rgb(123, 156, 255) !important;
+    overflow-x: scroll;
+    padding: 15px !important;
+}
+
+.prettyprint * {
+    user-select: text !important;
+}
+
+iframe {
+    width: calc(80vw - 20px);
+    height: calc(80vw * 0.5625);
+    max-width: 1000px;
+    box-shadow: rgba(0, 0, 0, 0.179) 0px 2px 10px;
+    border-radius: 10px;
 }

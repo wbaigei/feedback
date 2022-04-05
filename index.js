@@ -38,7 +38,7 @@ app.get('/view/json', function(req, res) {
             password = search.split('&')[1];
         }
     } catch (e) {
-        res.send({ "error": "Invalid api key" });
+        res.end(`{ "error": "Invalid api key" }`);
         return;
     }
     console.log(apiKey);
@@ -1044,6 +1044,15 @@ app.get('/api/reset', (req, res) => {
         }
     }
 });
+
+app.get('/docs', (req, res) => {
+    res.sendFile(__dirname + '/public/docs.html');
+});
+
+app.get('/res/img/:img', (req, res) => {
+    res.sendFile(__dirname + '/public/res/img/' + req.params.img);
+});
+
 
 var createApiKey = (key, password, name) => {
     var dataPath = __dirname + jsonPath + key + '.json';
