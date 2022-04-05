@@ -106,3 +106,25 @@ hr {
     left: 0;
     width: 100vw;
 }
+
+#fbs {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    flex-wrap: wrap;
+}
+
+.feedback {
+    background-color: rgba(123, 156, 255, 0.3);
+    padding: 15px;
+    border-radius: 5px;
+    max-width: 300px;
+    overflow: hidden;
+    margin: 15px;
+}
+
+.feedback p {
+    width: 90%;
+    text-overflow: ellipsis;
+}

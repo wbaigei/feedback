@@ -28,6 +28,42 @@ app.get('/css', function(req, res) {
     res.sendFile(__dirname + '/public/css/style.css');
 });
 
+app.get('/view/json', function(req, res) {
+    res.writeHead(200, { "Content-Type": 'text/plain', 'charset': 'utf-8', 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': 'PUT,POST,GET,DELETE,OPTIONS' });
+    var search = req.originalUrl.split('?')[1];
+    var apiKey, password;
+    try {
+        if (search.split('&')[0] != undefined && search.split('&')[1] != undefined) {
+            apiKey = search.split('&')[0];
+            password = search.split('&')[1];
+        }
+    } catch (e) {
+        res.send({ "error": "Invalid api key" });
+        return;
+    }
+    console.log(apiKey);
+    console.log(password);
+    var userdata = fs.readFileSync("data.json");
+    console.log(JSON.parse(userdata));
+    var haveUser = false;
+    var user;
+    var json = JSON.parse(userdata);
+    for (let i = 0; i < json['users'].length; i++) {
+        if (json['users'][i]['key'] == apiKey && json['users'][i]['password'] == password) {
+            user = json['users'][i].userId;
+            console.log(user);
+            haveUser = true;
+        }
+    }
+    var data = readFeedbackData(apiKey);
+    if (!haveUser) {
+        res.write(JSON.stringify({ "Message": "Api key not found", "error": "true" }));
+    } else if (data.error == 'no error') {
+        res.write(JSON.stringify(data));
+    }
+    res.end();
+});
+
 app.get('/view', function(req, res) {
     var search = req.originalUrl.split('?')[1];
     var apiKey, password;
@@ -215,7 +251,7 @@ app.get('/view', function(req, res) {
                     res.write(`
                 <div class="fb">
                     <p class="topic">${data.data[i].topic}</p>
-                    <p class="main">${data.data[i].message}-${data.data[i].message}</p>
+                    <p class="main">${data.data[i].message}-${data.data[i].user}</p>
                     <p class="date">${data.data[i].date}</p>
                 </div>`);
                 }
@@ -417,7 +453,7 @@ app.get('/view/zh', function(req, res) {
                     res.write(`
                 <div class="fb">
                     <p class="topic">${data.data[i].topic}</p>
-                    <p class="main">${data.data[i].message}-${data.data[i].message}</p>
+                    <p class="main">${data.data[i].message}-${data.data[i].user}</p>
                     <p class="date">${data.data[i].date}</p>
                 </div>`);
                 }
@@ -426,6 +462,206 @@ app.get('/view/zh', function(req, res) {
         res.end(`<hr><center><a>以上为反馈内容</a></center></body></html>`);
     } catch (err) {
         console.log(err);
+    }
+});
+
+app.get('/reset', function(req, res) {
+    var apiKey = req.query.apiKey;
+    var password = req.query.password;
+    if (apiKey == undefined || password == undefined) {
+        res.end(`<!DOCTYPE html>
+        <html>
+        
+        <head>
+            <meta charset="UTF-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>XFeedback Api</title>
+            <style>
+                input {
+                    width: 500px;
+                    height: 60px;
+                    font-size: 20px;
+                    margin: 10px;
+                    padding: 2px 10px;
+                    border: 2px solid #ccc;
+                    border-bottom: 5px solid rgb(123, 156, 255);
+                    border-radius: 4px;
+                    outline: none;
+                    background-color: transparent;
+                    font-weight: 100;
+                }
+                
+                .formTip {
+                    position: relative;
+                    left: -500px;
+                    z-index: 2;
+                    color: rgb(0, 0, 0);
+                    top: 0px;
+                    transition: .3s;
+                    background-color: white;
+                    padding: 0 5px;
+                    border-radius: 4px;
+                    font-size: 20px;
+                    font-weight: 100;
+                }
+                
+                .form {
+                    padding: 50px;
+                    border-radius: 4px;
+                    position: absolute;
+                    left: 50%;
+                    top: 50%;
+                    transform: translate(-50%, -50%);
+                    height: 500px;
+                }
+                
+                button {
+                    width: 520px;
+                    height: 60px;
+                    font-size: 20px;
+                    margin: 10px;
+                    padding: 2px 10px;
+                    border: 2px solid #ccc;
+                    border-radius: 4px;
+                    outline: none;
+                    background-color: transparent;
+                    font-weight: 100;
+                    transition: .5s;
+                }
+                
+                button:hover {
+                    background-color: red;
+                }
+                
+                @keyframes out {
+                    0% {
+                        height: 500px;
+                        opacity: 1;
+                    }
+                    100% {
+                        height: 0px;
+                        opacity: 0;
+                    }
+                }
+                
+                @keyframes in {
+                    0% {
+                        height: 0px;
+                        opacity: 0;
+                    }
+                    100% {
+                        height: 500px;
+                        opacity: 1;
+                    }
+                }
+                
+                p {
+                    font-weight: 100;
+                    font-size: 26px;
+                }
+            </style>
+        </head>
+        
+        <body>
+            <div class="form" id="f">
+                <div class="form-group">
+                    <input type="text" class="form-control" id="key" placeholder="Api Key">
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" id="password" placeholder="Password">
+                </div>
+                <button class="submit" onclick="confirmData()">RESET</button>
+            </div>
+            <script src="https://xchuangc.github.io/messagejs/message.js"></script>
+            <script>
+                startXmessage( /*Config*/ );
+                var confirmData = () => {
+                    var key = document.getElementById('key').value;
+                    var password = document.getElementById('password').value;
+                    if (key == '') {
+                        message('Please input your api key');
+                        return;
+                    }
+                    if (password == '') {
+                        message('Please input your password');
+                        return;
+                    }
+                    location.href = '/reset/?apiKey='+document.getElementById('key').value + '&password=' + document.getElementById('password').value;
+                }
+            </script>
+        </body>
+        
+        </html>`)
+    } else {
+        var html = `<!DOCTYPE html>
+    <html>
+    
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>XFeedback Api</title>
+    </head>
+    
+    <body>
+        <style>
+            .invaild {
+                font-weight: 100;
+                position: absolute;
+                top: 40%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+                padding: 40px;
+                background-color: rgb(240, 240, 240);
+                border: 2px solid rgb(232, 232, 232);
+                border-radius: 5px;
+            }
+            
+            h1 {
+                font-size: 2em;
+                font-weight: 100;
+                margin: 0;
+                padding: 0;
+            }
+            
+            .return {
+                font-weight: 100;
+                font-size: 26px;
+                margin: 0;
+                padding: 10px 20px;
+                color: black;
+                text-decoration: none;
+                cursor: pointer;
+                outline: none;
+                border: none;
+                background: linear-gradient(to right, lightgreen 0%, lightgreen 49.8%, red 50%, red 100%);
+                background-size: 200% 100%;
+                background-position: left bottom;
+                transition: all .5s cubic-bezier(0.3, 0.88, 0.76, 0.97);
+            }
+            
+            .return:hover {
+                color: white;
+                background-position: right bottom;
+            }
+        </style>
+        <div class="invaild">
+            <h1>Alert!</h1>
+            <p>You will delete all user feedback!</p>
+            <p>API Key: ${apiKey}</p>
+            <p>Password: ${password}</p>
+            <p>Please confirm it.</p>
+            <button class="return" onclick="location.href='../api/reset?apiKey=${apiKey}&password=${password}'">Confirm</button>
+        </div>
+    </body>
+    
+    </html>`;
+        res.send(html);
     }
 });
 
@@ -443,6 +679,28 @@ var readFeedbackData = (key) => {
 }
 
 app.get('/send', (req, res) => {
+    var apiKey = req.query.api;
+    var user = req.query.user;
+    var topic = req.query.topic;
+    var message = req.query.message;
+    var date = new Date();
+    res.setHeader('Content-Type', 'application/json');
+    if (apiKey == undefined || user == undefined || topic == undefined || message == undefined) {
+        res.end(`{"error": "invalid parameters"}`);
+        return this;
+    }
+    var data = {
+        "topic": topic,
+        "user": user,
+        "message": message,
+        "date": date.toLocaleString()
+    }
+    createFeedbackData(apiKey, data);
+    res.end(JSON.stringify(data));
+});
+
+app.get('/api/send', (req, res) => {
+    response.writeHead(200, { "Content-Type": 'text/plain', 'charset': 'utf-8', 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': 'PUT,POST,GET,DELETE,OPTIONS' });
     var apiKey = req.query.api;
     var user = req.query.user;
     var topic = req.query.topic;
@@ -656,6 +914,134 @@ app.get('/api/create', (req, res) => {
         res.sendFile(__dirname + '/public/apiCreateS.html');
     } else {
         res.sendFile(__dirname + '/public/siteError.html');
+    }
+});
+
+app.get('/api/reset', (req, res) => {
+    var password = req.query.password;
+    var apiKey = req.query.apiKey;
+    var userdata = fs.readFileSync("data.json");
+    console.log(JSON.parse(userdata));
+    res.setHeader('Content-Type', 'text/html');
+    res.write(`<html><head><meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Feedback</title></head><body>`);
+    var haveUser = false;
+    var user;
+    var json = JSON.parse(userdata);
+    for (let i = 0; i < json['users'].length; i++) {
+        if (json['users'][i]['key'] == apiKey && json['users'][i]['password'] == password) {
+            console.log(user);
+            haveUser = true;
+        }
+    }
+    if (!haveUser) {
+        res.end(`<style>
+            .invalid {
+                font-weight: 100;
+                position: absolute;
+                top: 40%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+                padding: 40px;
+                background-color: rgb(240, 240, 240);
+                border: 2px solid rgb(232, 232, 232);
+                border-radius: 5px;
+            }
+            
+            h1 {
+                font-size: 2em;
+                font-weight: 100;
+                margin: 0;
+                padding: 0;
+            }
+            
+            .return {
+                font-weight: 100;
+                font-size: 26px;
+                margin: 0;
+                padding: 10px 20px;
+                color: rgb(0, 0, 0);
+                text-decoration: none;
+                cursor: pointer;
+                outline: none;
+                border: none;
+                background: linear-gradient(to right, rgb(167, 170, 220) 0%, rgb(167, 170, 220) 49.8%, #f1592a 50%, #f1592a 100%);
+                background-size: 200% 100%;
+                background-position: left bottom;
+                transition: all .5s cubic-bezier(0.3, 0.88, 0.76, 0.97);
+            }
+            
+            .return:hover {
+                background-position: right bottom;
+            }
+        </style>
+        <div class="invalid">
+            <h1>Invalid api key or password.</h1>
+            <p>Please check your api key and password.</p>
+            <button class="return" onclick="window.history.go(-1)">Return</button>
+        </div>`);
+    } else {
+        if (apiKey) {
+            console.log(apiKey);
+            var dataPath = __dirname + jsonPath + apiKey + '.json';
+            fs.writeFileSync(dataPath, `{"data":[]}`);
+            res.end(`<style>
+            .invalid {
+                font-weight: 100;
+                position: absolute;
+                top: 40%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+                padding: 40px;
+                background-color: rgb(240, 240, 240);
+                border: 2px solid rgb(232, 232, 232);
+                border-radius: 5px;
+            }
+            
+            h1 {
+                font-size: 2em;
+                font-weight: 100;
+                margin: 0;
+                padding: 0;
+            }
+            
+            .return {
+                font-weight: 100;
+                font-size: 26px;
+                margin: 0;
+                padding: 10px 20px;
+                color: rgb(0, 0, 0);
+                text-decoration: none;
+                cursor: pointer;
+                outline: none;
+                border: none;
+                background: linear-gradient(to right, rgb(167, 170, 220) 0%, rgb(167, 170, 220) 49.8%, #f1592a 50%, #f1592a 100%);
+                background-size: 200% 100%;
+                background-position: left bottom;
+                transition: all .5s cubic-bezier(0.3, 0.88, 0.76, 0.97);
+            }
+            
+            .return:hover {
+                background-position: right bottom;
+            }
+        </style>
+        <div class="invalid">
+            <h1>Success!</h1>
+            <p>Feedback has been cleared.</p>
+            <button class="return" onclick="window.history.go(-1)">Return</button>
+        </div>`);
+        } else {
+            res.sendFile(__dirname + '/public/siteError.html');
+        }
     }
 });
 

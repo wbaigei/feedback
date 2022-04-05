@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>XFeedback Api</title>
     <link rel="stylesheet" href="/css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
 <body>
@@ -49,7 +50,17 @@
         <br>
         <button onclick="top.location = '/view?' + document.getElementById('key').value + '&' + document.getElementById('pw').value;">View</button>
     </center>
-
+    <center>
+        <h2>Feedback to us</h2>
+        <hr>
+        <input type="text" name="fb" id="fb" placeholder="The feedback message">
+        <br>
+        <button onclick="sendfb();">Send</button>
+        <hr>
+        <p>Check out our feedback</p>
+        <div id="fbs">
+        </div>
+    </center>
     <center>
         <tr><br><br>
             <a style="color:rgba(0, 0, 0, 0.671);" href="https://xchuangc.github.io/">Xchuangc</a>
@@ -60,6 +71,42 @@
             <br>
         </tr>
     </center>
+    <script>
+        var sendfb = () => {
+            var url = "/send?topic=[TOPIC]&user=[USERNAME]&message=[BODY]&api=psvPWNBE8mVWQErhPwt8jDXWKqRFtLJKrz7F1WvwweCMgFOO3cfcyj-wZ5O0A3dY"
+            url = url.replace("[TOPIC]", "Feedback");
+            url = url.replace("[USERNAME]", "Anonymous");
+            url = url.replace("[BODY]", document.getElementById("fb").value);
+            var xhr = new XMLHttpRequest();
+            console.log(url);
+            xhr.open("GET", url, true);
+            xhr.send();
+            document.getElementById("fb").value = "Thank you for your feedback!";
+            location.reload();
+        }
+        var json;
+        var getfb = () => {
+            var url = "/view/json/?psvPWNBE8mVWQErhPwt8jDXWKqRFtLJKrz7F1WvwweCMgFOO3cfcyj-wZ5O0A3dY&Yzx2007625@"
+            $.get(url, (data) => {
+                json = data;
+                console.log(data);
+                json = JSON.parse(json).data;
+                var fbs = document.getElementById("fbs");
+                // append the feedbacks
+                // the newest feedback is at the end of the array
+                // the newest feedback append first
+                // only append 5 feedbacks
+                for (var i = json.length - 1; i >= json.length - 12; i--) {
+                    var feedback = document.createElement("div");
+                    feedback.className = "feedback";
+                    feedback.innerHTML = "<p>" + json[i].message + "</p><hr><p>" + json[i].date + "</p>";
+                    fbs.appendChild(feedback);
+                }
+            });
+        }
+
+        getfb();
+    </script>
 </body>
 
 </html>
